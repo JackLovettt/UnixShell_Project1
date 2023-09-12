@@ -1,9 +1,10 @@
-//#include "param.hpp"
+#include "param.hpp"
 #include "parse.hpp"
 
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -24,8 +25,8 @@ int main(int argc, char* argv[]){
 
     //Search for debug flag
     for(int i=1;i<argc;i++){ 
-        if(argv[i]=="–Debug")
-            debug=true;
+        if(argv[i]=="–Debug" || argv[i]=="-Debug")  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
+            debug=true;                             //so I ORed it with a normal hyphen
     }
 
     cout << "Debug mode: " << debug << endl;
@@ -50,7 +51,7 @@ int main(int argc, char* argv[]){
 
         
         
-        //param=Parse::parse(input);
+        param=&Parse::parse(input); //not sure if & is correct 
 
     }
 

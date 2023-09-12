@@ -1,6 +1,8 @@
 #ifndef PARAM_HPP
 #define PARAM_HPP
 
+#include <vector>
+
 /* don't test program with more than this many tokens for input */
 #define MAXARGS 32
 /* class to hold input data */
@@ -12,7 +14,7 @@ private:
     char *outputRedirect; /* file name or NULL */
     int background; /* either 0 (false) or 1 (true) */
     int argumentCount; /* number of tokens in argument vector */
-    char *argumentVector[MAXARGS]; /* array of strings */
+    char *argumentVector[MAXARGS]; /* vector of strings */
 
 
 

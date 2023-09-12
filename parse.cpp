@@ -2,10 +2,11 @@
 #include "param.hpp"
 #include <string>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
-Param parse(string input){
+static Param parse(string input){
 
     istringstream inStream;
 
@@ -23,7 +24,11 @@ Param parse(string input){
     }
 
 
-    Param *out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
+    // TURN INPUT INTO ARGUMENTVECTOR HERE
+
+    //Param *out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
+
+    Param *out = new Param(NULL, NULL, 0, 1, argumentVector);
 
     return *out;
 
