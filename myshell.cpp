@@ -20,8 +20,8 @@ int main(int argc, char* argv[]){
     //main loop will exit when this is set to true
     bool exit = false;
 
-    Param *param;
-
+    Param* param;
+    Parse parser; //variable of type Parse named parser
 
     //Search for debug flag
     for(int i=1;i<argc;i++){ 
@@ -51,7 +51,9 @@ int main(int argc, char* argv[]){
 
         
         
-        param=&Parse::parse(input); //not sure if & is correct 
+        param=Parse::parse(input); //not sure if & is correct 
+
+        param.printParams();
 
     }
 
