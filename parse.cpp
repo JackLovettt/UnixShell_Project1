@@ -6,7 +6,7 @@
 
 using namespace std;
 
-static Param parse(string input){
+static Param* parse(string input){
 
     istringstream inStream;
 
@@ -14,13 +14,13 @@ static Param parse(string input){
     char *outputRedirect;
     int background;
     int argumentCount;
-    char *argumentVector[MAXARGS];
+    char* argumentVector[MAXARGS];
 
     inStream.clear();
     inStream.str(input);
 
     while(!inStream.eof()){
-        
+        argumentVector[0] = (char *)"test"; //not sure if cast is correct
     }
 
 
@@ -28,9 +28,9 @@ static Param parse(string input){
 
     //Param *out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
 
-    Param *out = new Param(NULL, NULL, 0, 1, argumentVector);
+    Param* out = new Param(NULL, NULL, 0, 1, argumentVector);
 
-    return *out;
+    return out;
 
 
 }
