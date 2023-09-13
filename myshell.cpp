@@ -14,11 +14,11 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
 
     istringstream inStream;
 
-    char *inputRedirect;
-    char *outputRedirect;
+    char *inputRedirect=NULL;
+    char *outputRedirect=NULL;
     int background=0;
     int argumentCount=0;
-    char* argumentVector[MAXARGS];
+    char *argumentVector[MAXARGS];
 
     inStream.clear();
     inStream.str(input);
@@ -31,7 +31,7 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
 
         if(temp.at(0)=='<'){ //input redirect char
             
-            cout << "Redirect detected" << endl;
+            //cout << "Input redirect detected" << endl;
 
             inputRedirect= new char[temp.size()];
 
@@ -44,8 +44,9 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
         }
 
         
-        else if(temp.at(0)=='>'){ //input redirect char
-            cout << "Redirect detected" << endl;
+        else if(temp.at(0)=='>'){   //output redirect char 
+
+            //cout << "Output redirect detected" << endl;
 
             outputRedirect= new char[temp.size()];
 
@@ -53,22 +54,36 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
 
             strcpy(outputRedirect, temp.c_str()); //use c_str() to convert to char[] to use
 
-            
-
         }
-                
+
+        else if(temp.at(0)=='&'){
+            //cout << "Background flag detected" << endl;
+            background=1;
+        }
+
+        
+        else{
+       
+            argumentVector[argumentCount]= strdup(temp.c_str()); //need to allocate memory for new string
+  
+            //argumentVector[argumentCount] = (char*)temp.c_str(); //just makes argumentVector[i] point at temp
+
+            //cout << argumentVector[argumentCount] << endl;
+
+            argumentCount++;
+        }
         
 
-        //cout << temp << endl;
 
     }
 
-
+    cout << endl; //DELETE ME WHEN DONE DEBUGGING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 
     //Param *out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
 
-    Param* out = new Param(inputRedirect, NULL, 0, argumentCount, argumentVector);
+    Param* out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
+    
 
     return out;
 
@@ -92,7 +107,10 @@ int main(int argc, char* argv[]){
 
     //Search for debug flag
     for(int i=1;i<argc;i++){ 
-        if(argv[i]=="–Debug" || argv[i]=="-Debug")  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
+
+        cout << argv[i] << endl;
+
+        if(argv[i]=="–Debug" || argv[i]=="-Debug" || argv[i]=="-D" || argv[i]=="-d")  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
             debug=true;                             //so I ORed it with a normal hyphen
     }
 
@@ -122,7 +140,8 @@ int main(int argc, char* argv[]){
         
         param=parse(input); //not sure if & is correct 
 
-        param->printParams();
+        if(debug)   //print params if debugging
+            param->printParams();
 
     }
 

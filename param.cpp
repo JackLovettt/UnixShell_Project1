@@ -11,7 +11,10 @@ Param::Param(char *inputRedirect, char *outputRedirect, int background, int argu
     this->outputRedirect=outputRedirect;
     this->background=background;
     this->argumentCount=argumentCount;
-    //this->argumentVector=argumentVector[MAXARGS]; IDK Why but this was causing a problem and was working when I didn't do anything
+    
+    for(int i=0;i<argumentCount;i++){
+        this->argumentVector[i]=argumentVector[i];
+    }
 
 }
 
@@ -32,6 +35,9 @@ void Param::printParams(){
     if(background==1)
         cout << "Background: [" << background << "]" << endl;
 
+    
+
+    
     for (int i = 0; i < argumentCount; i++)
         cout << "ArgumentVector["
             << i
@@ -39,7 +45,7 @@ void Param::printParams(){
             << argumentVector[i]
             << "]"
             << endl << endl;
-
+    
 
     cout << endl;
 }
