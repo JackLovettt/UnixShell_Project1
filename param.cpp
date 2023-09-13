@@ -44,7 +44,7 @@ void Param::printParams(){
             << "]: ["
             << argumentVector[i]
             << "]"
-            << endl << endl;
+            << endl;
     
 
     cout << endl;

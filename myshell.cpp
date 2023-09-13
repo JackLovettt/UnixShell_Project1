@@ -77,7 +77,7 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
 
     }
 
-    cout << endl; //DELETE ME WHEN DONE DEBUGGING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //cout << endl; //DELETE ME WHEN DONE DEBUGGING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 
     //Param *out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
@@ -102,45 +102,50 @@ int main(int argc, char* argv[]){
     //main loop will exit when this is set to true
     bool exit = false;
 
+    //Points at the param
     Param* param;
-    //Parse parser; //variable of type Parse named parser
+
+    cout << "Entered: ";
 
     //Search for debug flag
-    for(int i=1;i<argc;i++){ 
+    for(int i=0;i<argc;i++){ 
 
-        cout << argv[i] << endl;
+        cout << argv[i] << " ";
+        
+        //This was working, I changed other things, and for some reason this stopped working
+        //I don't see a reason why it shouldn't work
+        if(argv[1]=="–Debug" || argv[1]=="-Debug"){  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
+            debug=true;                              //so I ORed it with a normal hyphen
+        }
 
-        if(argv[i]=="–Debug" || argv[i]=="-Debug" || argv[i]=="-D" || argv[i]=="-d")  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
-            debug=true;                             //so I ORed it with a normal hyphen
+        debug=true; //done to manually force debug mode since "-Debug" =/= "-Debug" apparently
+
     }
+
+    cout << endl;
 
     cout << "Debug mode: " << debug << endl;
 
 
     while (!exit){
         
+        //prompt
         cout << "Enter command > ";
 
-        //gets entire line from buffer
+        //get entire line from buffer
         getline(cin, input);
-
         cout << endl;
 
-         //exit condition
+        //check exit condition
         if(input=="exit"){
             exit=true;
             continue;
         }
 
-        //cout << "You entered: " << input << endl;
-         
-       
+        //parse the input and save the Param
+        param=parse(input); 
 
-        
-        
-        param=parse(input); //not sure if & is correct 
-
-        if(debug)   //print params if debugging
+        if(debug)   //print params if debugging is flagged
             param->printParams();
 
     }
