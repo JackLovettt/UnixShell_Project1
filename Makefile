@@ -8,4 +8,4 @@ make:
 
 clean:
 		rm -rf *.dSYM
-		$(RM) *.o *.gc* test/*.o main $(TESTS) test/catch/catch.o
+		$(RM) *.o *.out *.gc* test/*.o main $(TESTS) test/catch/catch.o
