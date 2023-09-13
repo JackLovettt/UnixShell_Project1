@@ -16,6 +16,7 @@ Param::~Param(){
 
 }
 
+/*
 void Param::printParams(){
 
     for(int i=0;i<argumentCount;i++){
@@ -23,5 +24,36 @@ void Param::printParams(){
     }
 
     cout << endl;
-
 }
+
+*/
+
+void Param::printParams() { //taken from canvas
+    
+    cout << "InputRedirect: ["
+        << (inputRedirect != NULL) ? inputRedirect : "NULL";
+    
+    cout << "]" << endl
+        << "OutputRedirect: ["
+        << (outputRedirect != NULL) ? outputRedirect : "NULL";
+    
+    cout << "]" << endl
+        << "Background: ["
+        << background
+        << "]"
+        << endl
+
+    << "ArgumentCount: ["
+        << argumentCount
+        << "]"
+        << endl;
+    
+    for (int i = 0; i < argumentCount; i++)
+        cout << "ArgumentVector["
+            << i
+            << "]: ["
+            << argumentVector[i]
+            << "]"
+            << endl;
+}
+
