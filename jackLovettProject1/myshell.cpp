@@ -139,7 +139,6 @@ int main(int argc, char* argv[]){
         }
 
         //parse the input and save the Param
-        //param=Parse::parse(input); 
         param=parse(input); 
 
         if(debug)   //print params if debugging is flagged
