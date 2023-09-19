@@ -20,6 +20,45 @@ Param::Param(char *inputRedirect, char *outputRedirect, int background, int argu
 
 Param::~Param(){
 
+    cout << "Deleting stuff now" << endl;
+
+    if(inputRedirect!=nullptr)
+        delete inputRedirect;
+
+    cout << "Deleted input stuff" << endl;
+
+    if(outputRedirect!=nullptr)
+        delete outputRedirect;
+
+    cout << "Deleted output stuff" << endl;
+    
+    cout << "Background's value: " << background << endl;
+
+
+
+    for(int i=0; i<argumentCount; i++){
+        delete[] argumentVector[i];
+            cout << "Deleting loop interation " << i << endl;
+    }
+
+    cout << "Deleted loop" << endl;
+
+
+
+    //Do I even need to delete these last three?
+    //Are they on myshell's stack?
+    //Is that why parse.cpp is failing? Do I need to save it's values to the heap?
+
+    //delete &argumentVector; 
+    //cout << "Deleted array pointer" << endl;
+
+    //delete &argumentCount;
+    //cout << "Deleted argument count" << endl;
+
+
+    //delete &background;
+    //cout << "Deleted background" << endl;
+
 }
 
 

@@ -9,7 +9,9 @@ using namespace std;
 class Parse{
 
     public:
-      static Param parse(string input);  
+          //parse the input and make the Param where param points
+      static void parse(void* param, string input);  
+      static Param* parseReturn(string input);
 
 };
 

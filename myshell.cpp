@@ -6,6 +6,7 @@
 #include <cstring>
 #include <sstream>
 #include <vector>
+#include <unistd.h>
 
 using namespace std;
 
@@ -14,8 +15,8 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
 
     istringstream inStream;
 
-    char *inputRedirect=NULL;
-    char *outputRedirect=NULL;
+    char *inputRedirect=nullptr;
+    char *outputRedirect=nullptr;
     int background=0;
     int argumentCount=0;
     char *argumentVector[MAXARGS];
@@ -30,7 +31,7 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
         inStream >> temp;
 
         if(temp.at(0)=='<'){ //input redirect char
-            
+
             //cout << "Input redirect detected" << endl;
 
             inputRedirect= new char[temp.size()];
@@ -39,11 +40,9 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
 
             strcpy(inputRedirect, temp.c_str()); //use c_str() to convert to char[] to use
 
-            
 
         }
 
-        
         else if(temp.at(0)=='>'){   //output redirect char 
 
             //cout << "Output redirect detected" << endl;
@@ -61,32 +60,25 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
             background=1;
         }
 
-        
         else{
        
             argumentVector[argumentCount]= strdup(temp.c_str()); //need to allocate memory for new string
-  
-            //argumentVector[argumentCount] = (char*)temp.c_str(); //just makes argumentVector[i] point at temp
-
-            //cout << argumentVector[argumentCount] << endl;
-
             argumentCount++;
+
         }
         
-
-
     }
 
     //cout << endl; //DELETE ME WHEN DONE DEBUGGING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-
-    //Param *out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
-
     Param* out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
     
-
     return out;
+}
 
+int execute(Param param){
+
+    return 0;
 
 }
 
@@ -108,11 +100,15 @@ int main(int argc, char* argv[]){
     //Search for debug flag
     for(int i=0;i<argc;i++){ 
         
+        cout << "arg " << i << ": " << argv[i] << endl;
+
         //This was working, I changed other things, and for some reason this stopped working
         //I don't see a reason why it shouldn't work
         if(argv[i]=="–Debug" || argv[i]=="-Debug"){  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
             debug=true;                              //so I ORed it with a normal hyphen
         }
+
+        
 
         debug=true; //done to manually force debug mode since "-Debug" =/= "-Debug" apparently
 
@@ -138,13 +134,18 @@ int main(int argc, char* argv[]){
             continue;
         }
 
-        //parse the input and save the Param
-        //param=Parse::parse(input); 
-        param=parse(input); 
+        //parse the input and make the Param where param points
+        //Parse::parse((void*)param, input); 
+       
+        param=parse(input);  //made input into a pointer and this seems to work?
 
         if(debug)   //print params if debugging is flagged
             param->printParams();
 
+
+
+
+        delete param;
     }
 
 }
