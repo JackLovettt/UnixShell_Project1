@@ -135,9 +135,10 @@ int main(int argc, char* argv[]){
         if(input=="exit"){
             shutdown();
         }
-
+        
         //if the user hits enter without typing anything
         if(input.empty()){
+            cin.clear();
             continue;
         }
        
