@@ -1,7 +1,14 @@
-#include <iostream>
 #include "param.hpp"
+
+#include <iostream>
+#include <string>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 using std::endl;
 using std::cout;
+using std::string;
 
 int x=0;
 
@@ -18,30 +25,27 @@ Param::Param(char *inputRedirect, char *outputRedirect, int background, int argu
 
 }
 
+
 Param::~Param(){
 
-    cout << "Deleting stuff now" << endl;
+    //cout << "Deleting stuff now" << endl;
 
     if(inputRedirect!=nullptr)
         delete inputRedirect;
 
-    cout << "Deleted input stuff" << endl;
+    //cout << "Deleted input stuff" << endl;
 
     if(outputRedirect!=nullptr)
         delete outputRedirect;
 
-    cout << "Deleted output stuff" << endl;
+    //cout << "Deleted output stuff" << endl;
     
-    cout << "Background's value: " << background << endl;
-
-
-
     for(int i=0; i<argumentCount; i++){
         delete[] argumentVector[i];
-            cout << "Deleting loop interation " << i << endl;
+        //cout << "Deleting loop interation " << i << endl;
     }
 
-    cout << "Deleted loop" << endl;
+    //cout << "Deleted loop" << endl;
 
 
 
@@ -54,7 +58,6 @@ Param::~Param(){
 
     //delete &argumentCount;
     //cout << "Deleted argument count" << endl;
-
 
     //delete &background;
     //cout << "Deleted background" << endl;
@@ -89,7 +92,33 @@ void Param::printParams(){
     cout << endl;
 }
 
+//if !background: returns 0 to the parent, 
+//if background : returns the PID of the child to the parent
+//child executes param, or exits with -1 if execution fails
+int Param::execute(){
 
+    int forkVal=fork();
+
+    if(forkVal!=0){             //if Parent
+        if(background==0){      //if not running in background
+            wait(NULL);         //wait for the child to execute
+            return 0;
+        }
+        return forkVal; //return child PID if running in background
+    }
+    
+    //if Child:
+
+    execvp(argumentVector[0], argumentVector);
+
+    //if exec failed:
+
+    cout << "ERROR, exec() failed. Please check your input" << endl << endl;
+
+    //end the failed task
+    exit(-1); 
+
+}
 
 /*
 void Param::printParams() { //taken from canvas, prints 1 or 0 instead of string values

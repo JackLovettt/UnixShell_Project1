@@ -2,6 +2,7 @@
 #define PARAM_HPP
 
 #include <vector>
+#include <string>
 
 /* don't test program with more than this many tokens for input */
 #define MAXARGS 32
@@ -15,15 +16,15 @@ private:
     int background; /* either 0 (false) or 1 (true) */
     int argumentCount; /* number of tokens in argument vector */
     char *argumentVector[MAXARGS]; /* vector of strings */
-
-
-
     
 public:
 
     Param(char *inputRedirect, char *outputRedirect, int background, int argumentCount, char *argumentVector[]);
     ~Param();
 
+    bool backgroundJob();
+
+    int execute();
     void printParams();
 
 };

@@ -7,6 +7,8 @@
 #include <sstream>
 #include <vector>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 using namespace std;
 
@@ -76,9 +78,14 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
     return out;
 }
 
-int execute(Param param){
+//called when user enters "exit"
+void shutdown(){ 
 
-    return 0;
+    //wait for all processes to end
+    wait(NULL);
+
+    //exit
+    exit(1);
 
 }
 
@@ -91,26 +98,22 @@ int main(int argc, char* argv[]){
     //verbose if true
     bool debug = false;
 
-    //main loop will exit when this is set to true
-    bool exit = false;
-
     //Points at the param
     Param* param;
 
     //Search for debug flag
     for(int i=0;i<argc;i++){ 
         
-        cout << "arg " << i << ": " << argv[i] << endl;
+        //cout << "arg " << i << ": " << argv[i] << endl;
 
-        //This was working, I changed other things, and for some reason this stopped working
-        //I don't see a reason why it shouldn't work
-        if(argv[i]=="–Debug" || argv[i]=="-Debug"){  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
-            debug=true;                              //so I ORed it with a normal hyphen
+
+        if(strcmp(argv[i], "–Debug")==0 || strcmp(argv[i], "-Debug")==0){  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
+           debug=true;                                                     //so I ORed it with a normal hyphen
         }
 
         
 
-        debug=true; //done to manually force debug mode since "-Debug" =/= "-Debug" apparently
+        //debug=true; //done to manually force debug mode since "-Debug" =/= "-Debug" apparently
 
     }
 
@@ -118,33 +121,40 @@ int main(int argc, char* argv[]){
 
     cout << "Debug mode: " << debug << endl;
 
-
-    while (!exit){
+    //exit check is done after user input
+    while (1==1){
         
         //prompt
         cout << "Enter command > ";
 
-        //get entire line from buffer
+        //get entire line of input from buffer
         getline(cin, input);
         cout << endl;
 
         //check exit condition
         if(input=="exit"){
-            exit=true;
-            continue;
+            shutdown();
         }
 
-        //parse the input and make the Param where param points
-        //Parse::parse((void*)param, input); 
+        //if the user hits enter without typing anything
+        if(input.empty()){
+            continue;
+        }
        
-        param=parse(input);  //made input into a pointer and this seems to work?
+        param=parse(input); 
 
         if(debug)   //print params if debugging is flagged
             param->printParams();
 
+        //Need a datastructure, or at least a basic array to hold these to check 
+        //that they finish execution...
+        int child=param->execute();
 
+        //if(!param->backgroundJob()){
+           // join();
+        //} 
 
-
+        //after execution we must delete param
         delete param;
     }
 
