@@ -64,6 +64,10 @@ Param::~Param(){
 
 }
 
+bool Param::backgroundJob(){
+    return background;
+}
+
 
 
 void Param::printParams(){
@@ -104,6 +108,9 @@ int Param::execute(){
             wait(NULL);         //wait for the child to execute
             return 0;
         }
+
+        sleep(1); //done to ensure that child outputs first and prompt is properly displayed afterwards
+
         return forkVal; //return child PID if running in background
     }
     
@@ -119,34 +126,3 @@ int Param::execute(){
     exit(-1); 
 
 }
-
-/*
-void Param::printParams() { //taken from canvas, prints 1 or 0 instead of string values
-
-    cout << "InputRedirect: ["
-        << (inputRedirect != NULL) ? inputRedirect : "NULL";
-    
-    cout << "]" << endl
-        << "OutputRedirect: ["
-        << (outputRedirect != NULL) ? outputRedirect : "NULL";
-    
-    cout << "]" << endl
-        << "Background: ["
-        << background
-        << "]"
-        << endl
-
-    << "ArgumentCount: ["
-        << argumentCount
-        << "]"
-        << endl;
-    
-    for (int i = 0; i < argumentCount; i++)
-        cout << "ArgumentVector["
-            << i
-            << "]: ["
-            << argumentVector[i]
-            << "]"
-            << endl << endl;
-}
-*/

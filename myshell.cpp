@@ -33,6 +33,7 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
         inStream >> temp;
 
         if(temp.at(0)=='<'){ //input redirect char
+        
 
             //cout << "Input redirect detected" << endl;
 
@@ -79,10 +80,13 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
 }
 
 //called when user enters "exit"
-void shutdown(){ 
+//we call WAIT() for each background job. 
+//some of these may have already ended
+void shutdown(int backgroundJobs){ 
 
-    //wait for all processes to end
-    wait(NULL);
+    //wait for all child processes to end
+    for(int i=0; i<backgroundJobs; i++)    
+        wait(NULL);
 
     //exit
     exit(1);
@@ -121,6 +125,9 @@ int main(int argc, char* argv[]){
 
     cout << "Debug mode: " << debug << endl;
 
+    int backgroundJobs=0;   //we will WAIT(NULL) this many times during shutdown 
+                            //to ensure that all child processes have exited
+
     //exit check is done after user input
     while (1==1){
         
@@ -133,7 +140,7 @@ int main(int argc, char* argv[]){
 
         //check exit condition
         if(input=="exit"){
-            shutdown();
+            shutdown(backgroundJobs);
         }
         
         //if the user hits enter without typing anything
@@ -144,12 +151,18 @@ int main(int argc, char* argv[]){
        
         param=parse(input); 
 
+        if(param->backgroundJob()){
+            backgroundJobs++;
+        }
+
         if(debug)   //print params if debugging is flagged
             param->printParams();
 
         //Need a datastructure, or at least a basic array to hold these to check 
         //that they finish execution...
         int child=param->execute();
+
+        cout << "child value: "<< child << endl;
 
         //if(!param->backgroundJob()){
            // join();
