@@ -33,7 +33,11 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
         inStream >> temp;
 
         if(temp.at(0)=='<'){ //input redirect char
-        
+
+            if(temp=="<"){
+                cout << "ERROR, input redirect characted detected but no file specified" << endl;
+                return nullptr;
+            }
 
             //cout << "Input redirect detected" << endl;
 
@@ -49,7 +53,10 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
         else if(temp.at(0)=='>'){   //output redirect char 
 
             //cout << "Output redirect detected" << endl;
-
+            if(temp==">"){
+                cout << "ERROR, output redirect characted detected but no file specified" << endl;
+                return nullptr;
+            }
             outputRedirect= new char[temp.size()];
 
             temp = temp.substr(1,temp.size());
@@ -151,6 +158,9 @@ int main(int argc, char* argv[]){
        
         param=parse(input); 
 
+        if(param==nullptr){ //if input parsing failed
+            continue;}
+
         if(param->backgroundJob()){
             backgroundJobs++;
         }
@@ -162,7 +172,7 @@ int main(int argc, char* argv[]){
         //that they finish execution...
         int child=param->execute();
 
-        cout << "child value: "<< child << endl;
+        //cout << "child value: "<< child << endl;
 
         //if(!param->backgroundJob()){
            // join();

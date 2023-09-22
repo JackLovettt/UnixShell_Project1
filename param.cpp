@@ -101,22 +101,29 @@ void Param::printParams(){
 //child executes param, or exits with -1 if execution fails
 int Param::execute(){
 
+
+    cout.clear();
+    std::cin.clear();
+
     int forkVal=fork();
 
     if(forkVal!=0){             //if Parent
         if(background==0){      //if not running in background
             wait(NULL);         //wait for the child to execute
+            sleep(1);
             return 0;
         }
-
-        sleep(1); //done to ensure that child outputs first and prompt is properly displayed afterwards
 
         return forkVal; //return child PID if running in background
     }
     
     //if Child:
 
+    //need to set input/output streams here somehow
+
     execvp(argumentVector[0], argumentVector);
+    
+
 
     //if exec failed:
 
