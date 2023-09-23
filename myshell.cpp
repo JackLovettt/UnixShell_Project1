@@ -23,6 +23,15 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
     int argumentCount=0;
     char *argumentVector[MAXARGS];
 
+    
+    for(int i=0;i!=MAXARGS;i++){ //set every element of the array to a null character
+        //argumentVector[i] = new char;
+        argumentVector[i] = strdup("\0");
+        //strcpy(argumentVector[i],"\0"); //trying to construct and destruct all 32 entries and it failed
+    }
+    cout << endl;
+    
+
     inStream.clear();
     inStream.str(input);
 
@@ -31,6 +40,13 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
     while(!inStream.eof()){
 
         inStream >> temp;
+
+        if(argumentCount>0){ //detecting duplicated final argument
+            if(strcmp(temp.c_str(),argumentVector[argumentCount-1])==0){
+                cout << "Duplicate argument detected";
+                continue;
+            }
+        }
 
         if(temp.at(0)=='<'){ //input redirect char
 
@@ -46,7 +62,9 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
             temp = temp.substr(1,temp.size());
 
             strcpy(inputRedirect, temp.c_str()); //use c_str() to convert to char[] to use
-
+            
+            strcpy(argumentVector[argumentCount],temp.c_str());  //MAYBE DELETE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            argumentCount++;
 
         }
 
@@ -71,13 +89,22 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
         }
 
         else{
-       
-            argumentVector[argumentCount]= strdup(temp.c_str()); //need to allocate memory for new string
+            
+            //argumentVector[argumentCount]=strdup(temp.c_str()); //need to allocate memory for new string
+            strcpy(argumentVector[argumentCount],temp.c_str()); 
             argumentCount++;
 
         }
         
     }
+
+    cout << "Args during parsing:" << endl;
+    for(int i=0;i<MAXARGS;i++){
+        cout << "Arg " << i << ": " << argumentVector[i] << endl;
+    }
+    cout << endl;
+
+    //argumentVector[argumentCount]=strdup("\0");
 
     //cout << endl; //DELETE ME WHEN DONE DEBUGGING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -91,10 +118,15 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
 //some of these may have already ended
 void shutdown(int backgroundJobs){ 
 
+    cout << "Beginning shutdown procedure" << endl;
+
     //wait for all child processes to end
-    for(int i=0; i<backgroundJobs; i++)    
+    for(int i=0; i<backgroundJobs; i++){    
+
+        cout << "Shutting down background job #" << i << "/" << backgroundJobs << endl;
         wait(NULL);
 
+    }
     //exit
     exit(1);
 
@@ -115,16 +147,9 @@ int main(int argc, char* argv[]){
     //Search for debug flag
     for(int i=0;i<argc;i++){ 
         
-        //cout << "arg " << i << ": " << argv[i] << endl;
-
-
         if(strcmp(argv[i], "–Debug")==0 || strcmp(argv[i], "-Debug")==0){  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
            debug=true;                                                     //so I ORed it with a normal hyphen
         }
-
-        
-
-        //debug=true; //done to manually force debug mode since "-Debug" =/= "-Debug" apparently
 
     }
 
@@ -139,10 +164,11 @@ int main(int argc, char* argv[]){
     while (1==1){
         
         //prompt
-        cout << "Enter command > ";
+        cout << endl << "~> ";
 
         //get entire line of input from buffer
         getline(cin, input);
+        cin.clear(); //clear input buffer
         cout << endl;
 
         //check exit condition
@@ -171,12 +197,6 @@ int main(int argc, char* argv[]){
         //Need a datastructure, or at least a basic array to hold these to check 
         //that they finish execution...
         int child=param->execute();
-
-        //cout << "child value: "<< child << endl;
-
-        //if(!param->backgroundJob()){
-           // join();
-        //} 
 
         //after execution we must delete param
         delete param;
