@@ -167,7 +167,10 @@ int Param::execute(){
     
     //if Child:
 
-    //need to set input/output streams here somehow
+    
+    if(outputRedirect!=nullptr){
+        freopen(outputRedirect, "w",stdout);
+    }
 
     execvp(argumentVector[0], argumentVector);
     

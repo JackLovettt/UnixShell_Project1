@@ -1,0 +1,17 @@
+total 124
+-rw-r--r-- 1 nurox nurox   445 Sep 23 17:11 Makefile
+-rw-r--r-- 1 nurox nurox  8394 Sep 12 23:36 Project 1 Midpoint Report.docx
+-rw-r--r-- 1 nurox nurox     0 Sep 12 23:39 Project 1 Midpoint Report.docx:Zone.Identifier
+-rw-r--r-- 1 nurox nurox   543 Sep 12 23:35 README.txt
+drwxr-xr-x 2 nurox nurox  4096 Sep 16 14:12 backup
+drwxr-xr-x 2 nurox nurox  4096 Sep 12 23:45 jackLovettProject1
+-rw-r--r-- 1 nurox nurox 12355 Sep 12 23:45 jackLovettProject1.zip
+-rwxr-xr-x 1 nurox nurox 28440 Sep 23 17:11 myshell
+-rw-r--r-- 1 nurox nurox  5490 Sep 23 14:29 myshell.cpp
+-rw-r--r-- 1 nurox nurox  4119 Sep 23 14:55 param.cpp
+-rw-r--r-- 1 nurox nurox   798 Sep 22 12:36 param.hpp
+-rw-r--r-- 1 nurox nurox  3915 Sep 16 14:36 parse.cpp
+-rw-r--r-- 1 nurox nurox   303 Sep 16 14:45 parse.hpp
+-rwxr-xr-x 1 nurox nurox 16616 Sep 23 17:11 slow
+-rw-r--r-- 1 nurox nurox   175 Sep 23 14:10 slow.cpp
+-rw-r--r-- 1 nurox nurox     0 Sep 23 17:11 testfile.txt
