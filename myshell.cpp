@@ -1,5 +1,4 @@
 #include "param.hpp"
-#include "parse.hpp"
 
 #include <iostream>
 #include <string>
@@ -29,24 +28,21 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
         argumentVector[i] = strdup("\0");
         //strcpy(argumentVector[i],"\0"); //trying to construct and destruct all 32 entries and it failed
     }
-    cout << endl;
     
-
+    //cout << endl;
+    //cout << "Parsing input :" << input << "|" << endl;
+    //cout << "After trimming :" << input.substr(0, input.find_last_not_of(" ")+1) << "|" << endl;
+    
     inStream.clear();
-    inStream.str(input);
+
+    //loads inStream with input, with all trailing " " characters removed
+    inStream.str(input.substr(0,(input.find_last_not_of(" ")+1)));
 
     string temp;
 
     while(!inStream.eof()){
 
         inStream >> temp;
-
-        if(argumentCount>0){ //detecting duplicated final argument
-            if(strcmp(temp.c_str(),argumentVector[argumentCount-1])==0){
-                cout << "Duplicate argument detected";
-                continue;
-            }
-        }
 
         if(temp.at(0)=='<'){ //input redirect char
 
@@ -98,15 +94,17 @@ Param* parse(string input){ //I wanted to have this in parse.cpp but I was getti
         
     }
 
+    if(argumentCount<MAXARGS){              //if we need a final NULL
+        argumentVector[argumentCount]=NULL; //sets the last arg to NULL
+    }
+
+    /*
     cout << "Args during parsing:" << endl;
     for(int i=0;i<MAXARGS;i++){
         cout << "Arg " << i << ": " << argumentVector[i] << endl;
     }
     cout << endl;
-
-    //argumentVector[argumentCount]=strdup("\0");
-
-    //cout << endl; //DELETE ME WHEN DONE DEBUGGING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    */
     
     Param* out = new Param(inputRedirect, outputRedirect, background, argumentCount, argumentVector);
     
@@ -123,11 +121,12 @@ void shutdown(int backgroundJobs){
     //wait for all child processes to end
     for(int i=0; i<backgroundJobs; i++){    
 
-        cout << "Shutting down background job #" << i << "/" << backgroundJobs << endl;
+        cout << "Shutting down background job #" << i+1 << "/" << backgroundJobs << endl;
         wait(NULL);
 
     }
-    //exit
+
+    cout << "Shutdown procedure complete" << endl << endl;
     exit(1);
 
 }
@@ -141,21 +140,17 @@ int main(int argc, char* argv[]){
     //verbose if true
     bool debug = false;
 
-    //Points at the param
+    //Points at the param for execution
     Param* param;
 
     //Search for debug flag
     for(int i=0;i<argc;i++){ 
-        
         if(strcmp(argv[i], "–Debug")==0 || strcmp(argv[i], "-Debug")==0){  //When I copy pasted the "-Debug" from the pdf it used a weird '-' character, 
            debug=true;                                                     //so I ORed it with a normal hyphen
         }
-
     }
 
-    cout << endl;
-
-    cout << "Debug mode: " << debug << endl;
+    cout << endl << "Debug mode: " << debug << endl;
 
     int backgroundJobs=0;   //we will WAIT(NULL) this many times during shutdown 
                             //to ensure that all child processes have exited
@@ -168,7 +163,7 @@ int main(int argc, char* argv[]){
 
         //get entire line of input from buffer
         getline(cin, input);
-        cin.clear(); //clear input buffer
+        cin.clear(); //clear input buffer after getting one line
         cout << endl;
 
         //check exit condition
@@ -178,7 +173,7 @@ int main(int argc, char* argv[]){
         
         //if the user hits enter without typing anything
         if(input.empty()){
-            cin.clear();
+            cin.clear(); //prevents infinite loop that crashes computer
             continue;
         }
        

@@ -27,6 +27,7 @@ Param::Param(char *inputRedirect, char *outputRedirect, int background, int argu
 }
 
 
+
 Param::~Param(){
 
     //cout << "Deleting stuff now" << endl;
@@ -82,17 +83,8 @@ void Param::printParams(){
     if(background==1)
         cout << "Background: [" << background << "]" << endl;
 
-    
-
-    
     for (int i = 0; i < argumentCount; i++)
-        cout << "ArgumentVector["
-            << i
-            << "]: ["
-            << argumentVector[i]
-            << "]"
-            << endl;
-    
+        cout << "ArgumentVector[" << i << "]: [" << argumentVector[i] << "]" << endl;
 
     cout << endl;
 }
@@ -104,7 +96,8 @@ int Param::execute(){
 
     cout.clear();
     std::cin.clear();
-
+    
+    /*  
     cout << "Checking arguments during execution:" << endl;
 
     //arg dup debugging
@@ -118,63 +111,30 @@ int Param::execute(){
         wait(NULL);
         cout << endl << endl;
     }
-    
-    /*
-    cout << "Deleting excess arguments" << endl;
-
-    if(argumentCount<MAXARGS){
-        argumentVector[argumentCount]=NULL;
-        for(int i=argumentCount+1;i<MAXARGS;i++){
-            delete[] argumentVector[i];
-        }
-    }
-
-    cout << "Checking arguments after deletion:" << endl;
-
-    if(fork()==0){
-        for(int i=0;i<MAXARGS;i++){ //print everything till it fails
-             cout <<"Arg " << i << ": " << argumentVector[i] << endl;
-        }
-        exit(1);
-    }
-    else{
-        wait(NULL);
-        cout << endl << endl;
-        cout << "Attempting execution" << endl;
-    }
     */
 
+
+    int forkVal=fork(); //split parent and child
+
+    if(forkVal!=0){//if Parent
     
-
-
-    if(argumentCount<MAXARGS){              //if we need a final NULL
-        argumentVector[argumentCount]=NULL; //sets the last arg to NULL
-    }
-
-    int forkVal=fork();
-
-    if(forkVal!=0){             //if Parent
-    
-        if(background==0){      //if not running in background
-            cout << "Beginning to wait" << endl;
-            waitpid(forkVal, NULL, 0);         //wait for the child to execute
-            cout << "Done waiting" << endl;
+        if(background==0){              //if not running in background
+            waitpid(forkVal, NULL, 0);  //wait for the child to execute
             return 0;
         }
 
         return forkVal; //return child PID if running in background
     }
     
-    //if Child:
+    //else => Child:
 
     
-    if(outputRedirect!=nullptr){
-        freopen(outputRedirect, "w",stdout);
+    if(outputRedirect!=nullptr){    //if we need to write to file
+        freopen(outputRedirect, "w", stdout);   //overrwite that file with out output
     }
 
-    execvp(argumentVector[0], argumentVector);
+    execvp(argumentVector[0], argumentVector);  //execute the Param
     
-
 
     //if exec failed:
 
